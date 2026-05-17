@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "spawnpokegen",
+  "version": "${version}",
+  "name": "SpawnPokeGen",
+  "description": "Restrict Cobblemon world spawns to a single Pokémon generation using /spawnpokegen <1-9>",
+  "authors": ["tike"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.spawnpokegen.SpawnPokeGenMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "cobblemon": "*"
+  }
+}

@@ -1,0 +1,74 @@
+plugins {
+    id 'fabric-loom' version '1.7.4'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+layout.buildDirectory.set(file("C:/gradle_builds/spawnpokegen"))
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://maven.fabricmc.net/" }
+    // Fabric API / Cobblemon
+    maven {
+        name = "Cobblemon (ImpactDev)"
+        url = "https://maven.impactdev.net/repository/development/"
+    }
+}
+
+loom {
+    splitEnvironmentSourceSets()
+    mods {
+        "spawnpokegen" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+fabricApi {
+    configureDataGeneration()
+}
+
+dependencies {
+    // Minecraft & Fabric
+    minecraft "com.mojang:minecraft:1.21.1"
+    mappings "net.fabricmc:yarn:1.21.1+build.3:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.16.9"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.106.0+1.21.1"
+
+    // Cobblemon – local dependency
+    modCompileOnly(files("libs/Cobblemon-fabric-1.7.3+1.21.1.jar"))
+
+    // Kotlin Stdlib for compiling Cobblemon event handlers
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:1.9.21"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
